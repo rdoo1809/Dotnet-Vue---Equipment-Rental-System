@@ -7,15 +7,15 @@ namespace Midterm_PROG3340_RDooley
 {
     [Authorize]
     [Route("api/[controller]")]
-    [Route("api/v{version:apiVersion}/[controller]")] // api/v1/books or api/v2/books
+    [Route("api/v{version:apiVersion}/[controller]")] // api/v1/equipment or api/v2/equipment
     [ApiVersion("1.0")]
     [ApiVersion("2.0")]
     [ApiController]
-    public class BooksController : ControllerBase
+    public class EquipmentController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public BooksController(IUnitOfWork unitOfWork)
+        public EquipmentController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -29,10 +29,10 @@ namespace Midterm_PROG3340_RDooley
         {
             var books = _unitOfWork.Books.GetAll().Select(book => new BookV1Dto
             {
-                Title = book.Title,
-                Author = book.Author,
-                Price = book.Price,
-                IsAvailable = book.IsAvavilable
+                Title = book.Name,
+                Author = book.Description,
+                // Price = book.Category,
+                // IsAvailable = book.RentalPrice
             });
             
             return Ok(books);
@@ -49,10 +49,10 @@ namespace Midterm_PROG3340_RDooley
             
             return new BookV1Dto
             {
-                Title = book.Title,
-                Author = book.Author,
-                Price = book.Price,
-                IsAvailable = book.IsAvavilable
+                Title = book.Name,
+                Author = book.Description,
+                // Price = book.Category,
+                // IsAvailable = book.RentalPrice
             };
         }
 
@@ -60,16 +60,16 @@ namespace Midterm_PROG3340_RDooley
         [MapToApiVersion("1.0")]
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public ActionResult<Book> CreateBook(BookV1Dto dto)
+        public ActionResult<Equipment> CreateBook(BookV1Dto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var book = new Book
+            var book = new Equipment
             {
-                Title = dto.Title,
-                Author = dto.Author,
-                Price = dto.Price,
-                IsAvavilable = dto.IsAvailable
+                Name = dto.Title,
+                Description = dto.Author,
+                // Category = dto.Price,
+                // RentalPrice = dto.IsAvailable
             };
 
             _unitOfWork.Books.Add(book);
@@ -81,17 +81,17 @@ namespace Midterm_PROG3340_RDooley
         [MapToApiVersion("1.0")]
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public ActionResult<Book> UpdateBook(int id, BookV1Dto bookDto)
+        public ActionResult<Equipment> UpdateBook(int id, BookV1Dto bookDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var book = _unitOfWork.Books.GetById(id);
             if (book is null) return NotFound();
 
             // only update allowed fields
-            book.Title = bookDto.Title;
-            book.Author = bookDto.Author;
-            book.Price = bookDto.Price;
-            book.IsAvavilable = bookDto.IsAvailable;
+            book.Name = bookDto.Title;
+            book.Description = bookDto.Author;
+            // book.Category = bookDto.Price;
+            // book.RentalPrice = bookDto.IsAvailable;
 
             _unitOfWork.Books.Update(book);
             _unitOfWork.Complete();
@@ -103,7 +103,7 @@ namespace Midterm_PROG3340_RDooley
         [MapToApiVersion("2.0")]
         [Authorize(Roles = "Admin,User")]
         [HttpGet]
-        public ActionResult<IEnumerable<Book>> GetBooksV2()
+        public ActionResult<IEnumerable<Equipment>> GetBooksV2()
         {
             return Ok(_unitOfWork.Books.GetAll());
         }
@@ -112,7 +112,7 @@ namespace Midterm_PROG3340_RDooley
         [MapToApiVersion("2.0")]
         [Authorize(Roles = "Admin,User")]
         [HttpGet("{id}")]
-        public ActionResult<Book> GetBookV2(int id)
+        public ActionResult<Equipment> GetBookV2(int id)
         {
             var book = _unitOfWork.Books.GetById(id);
             if (book is null) return NotFound();
@@ -123,21 +123,21 @@ namespace Midterm_PROG3340_RDooley
         [MapToApiVersion("2.0")]
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public ActionResult<Book> CreateBookV2(Book book)
+        public ActionResult<Equipment> CreateBookV2(Equipment equipment)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            _unitOfWork.Books.Add(book);
+            _unitOfWork.Books.Add(equipment);
             _unitOfWork.Complete();
 
-            return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
+            return CreatedAtAction(nameof(GetBook), new { id = equipment.Id }, equipment);
         }
 
         // PUT: /api/v2/books/{id}
         [MapToApiVersion("2.0")]
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public ActionResult<Book> UpdateBookV2(int id, Book incoming)
+        public ActionResult<Equipment> UpdateBookV2(int id, Equipment incoming)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
         
@@ -145,12 +145,12 @@ namespace Midterm_PROG3340_RDooley
             if (book is null) return NotFound();
         
             // map all fields (v2 allows Genre/PublishedYear)
-            book.Title = incoming.Title;
-            book.Author = incoming.Author;
-            book.Price = incoming.Price;
-            book.IsAvavilable = incoming.IsAvavilable;
-            book.Genre = incoming.Genre;
-            book.PublishedYear = incoming.PublishedYear;
+            book.Name = incoming.Name;
+            book.Description = incoming.Description;
+            book.Category = incoming.Category;
+            book.RentalPrice = incoming.RentalPrice;
+            book.IsAvailable = incoming.IsAvailable;
+            // book.PublishedYear = incoming.PublishedYear;
         
             _unitOfWork.Books.Update(book);
             _unitOfWork.Complete();
@@ -164,7 +164,7 @@ namespace Midterm_PROG3340_RDooley
         [MapToApiVersion("2.0")]
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public ActionResult<Book> DeleteBook(int id)
+        public ActionResult<Equipment> DeleteBook(int id)
         {
             var book = _unitOfWork.Books.GetById(id);
             if (book is null) return NotFound();

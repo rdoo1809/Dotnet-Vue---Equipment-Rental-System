@@ -11,50 +11,20 @@ public class AppDbContext : DbContext
         _env = env;
     }
     
-    public DbSet<Book> Books { get; set; } = null!;
+    public DbSet<Equipment> Equipment { get; set; } = null!;
          
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        bool isDevelopment = _env?.IsDevelopment() ?? true;
+        modelBuilder.Entity<Equipment>().HasData(
+            new Equipment { Id = 1, Name = "Excavator", Description = "Large hydraulic excavator for heavy lifting", Category = "Heavy Machinery", RentalPrice = 250.00, IsAvailable = true, CreatedAt = DateTime.Parse("2023-01-15") },
+            new Equipment { Id = 2, Name = "Cordless Drill", Description = "18V battery-powered drill for versatile use", Category = "Power Tools", RentalPrice = 15.00, IsAvailable = true, CreatedAt = DateTime.Parse("2022-07-10") },
+            new Equipment { Id = 3, Name = "Pickup Truck", Description = "4x4 truck for transporting equipment", Category = "Vehicles", RentalPrice = 80.00, IsAvailable = false, CreatedAt = DateTime.Parse("2021-03-22") },
+            new Equipment { Id = 4, Name = "Safety Helmet", Description = "High-impact protective helmet", Category = "Safety", RentalPrice = 5.00, IsAvailable = true, CreatedAt = DateTime.Parse("2024-05-05") },
+            new Equipment { Id = 5, Name = "Theodolite", Description = "Precision surveying instrument for angle measurements", Category = "Surveying", RentalPrice = 40.00, IsAvailable = false, CreatedAt = DateTime.Parse("2023-11-12") },
+            new Equipment { Id = 6, Name = "Chainsaw", Description = "Gas-powered chainsaw for tree cutting", Category = "Power Tools", RentalPrice = 25.00, IsAvailable = true, CreatedAt = DateTime.Parse("2022-09-18") },
+            new Equipment { Id = 7, Name = "Forklift", Description = "Electric forklift for warehouse operations", Category = "Heavy Machinery", RentalPrice = 120.00, IsAvailable = true, CreatedAt = DateTime.Parse("2023-06-30") }
+        );
         
-        if (isDevelopment)
-        {
-            modelBuilder.Entity<Book>().HasData(
-                new Book { Id = 1, Title = "Dev IT", Author = "Stephen King", 
-                    Price = 14.99m, Genre = "Horror", IsAvavilable = true, PublishedYear = 1986 },
-                new Book { Id = 2, Title = "Dev Pet Semetary", Author = "Stephen King", 
-                    Price = 9.99m, Genre = "Horror", IsAvavilable = true, PublishedYear = 1983 },
-                new Book { Id = 3, Title = "Dev Salem's Lot", Author = "Stephen King", 
-                    Price = 6.99m, Genre = "Horror", IsAvavilable = false, PublishedYear = 1975 },
-                new Book { Id = 4, Title = "Dev Greenlights", Author = "Matthew McConaughey", 
-                    Price = 18.99m, Genre = "Memoirs", IsAvavilable = false, PublishedYear = 2020},
-                new Book { Id = 5, Title = "Dev On The Road With Bob Dylan", Author = "Larry Sloman", 
-                    Price = 7.99m, Genre = "Music", IsAvavilable = true, PublishedYear = 1978},
-                new Book { Id = 6, Title = "Dev Road Cases", Author = "Meat", 
-                    Price = 17.99m, Genre = "Music", IsAvavilable = true, PublishedYear = 2025},
-                new Book { Id = 7, Title = "Dev Harry Potter", Author = "J.K. Rowling", 
-                    Price = 11.99m, Genre = "Fiction", IsAvavilable = false, PublishedYear = 1997}
-            );    
-        }
-        else
-        {
-            modelBuilder.Entity<Book>().HasData(
-                new Book { Id = 1, Title = "Production IT", Author = "Stephen King", 
-                    Price = 14.99m, Genre = "Horror", IsAvavilable = true, PublishedYear = 1986 },
-                new Book { Id = 2, Title = "Production Pet Semetary", Author = "Stephen King", 
-                    Price = 9.99m, Genre = "Horror", IsAvavilable = true, PublishedYear = 1983 },
-                new Book { Id = 3, Title = "Production Salem's Lot", Author = "Stephen King", 
-                    Price = 6.99m, Genre = "Horror", IsAvavilable = false, PublishedYear = 1975 },
-                new Book { Id = 4, Title = "Production Greenlights", Author = "Matthew McConaughey", 
-                    Price = 18.99m, Genre = "Memoirs", IsAvavilable = false, PublishedYear = 2020},
-                new Book { Id = 5, Title = "Production On The Road With Bob Dylan", Author = "Larry Sloman", 
-                    Price = 7.99m, Genre = "Music", IsAvavilable = true, PublishedYear = 1978},
-                new Book { Id = 6, Title = "Production Road Cases", Author = "Meat", 
-                    Price = 17.99m, Genre = "Music", IsAvavilable = true, PublishedYear = 2025},
-                new Book { Id = 7, Title = "Dev Harry Potter", Author = "J.K. Rowling", 
-                    Price = 11.99m, Genre = "Fiction", IsAvavilable = false, PublishedYear = 1997}
-            ); 
-        }
     }
 }
