@@ -1,0 +1,51 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio
+.vs/
+
+# Rider / IntelliJ IDEA
+.idea/
+*.sln.iml
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# ASP.NET runtime logs
+*.log
+
+# DotCover
+*.dotCover
+
+# Tye
+.tye/
+
+# Node (if frontend lives inside project)
+node_modules/
+
+# Mac OS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Environment files
+appsettings.*.json
+*.env
