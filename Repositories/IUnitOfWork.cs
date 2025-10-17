@@ -2,7 +2,7 @@
 {
     public interface IUnitOfWork
     {
-        IRepository<Equipment> Books { get; }
+        IRepository<Equipment> Equipment { get; }
 
         int Complete();
     }
