@@ -3,6 +3,7 @@
     public interface IUnitOfWork
     {
         IRepository<Equipment> Equipment { get; }
+        IRepository<User> User { get; }
 
         int Complete();
     }

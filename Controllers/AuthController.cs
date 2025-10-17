@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Midterm_PROG3340_RDooley.Repositories;
 
 namespace Midterm_PROG3340_RDooley.Controllers;
 
@@ -9,23 +10,25 @@ namespace Midterm_PROG3340_RDooley.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    // in-memory users
-    private readonly List<(string Username, string Password, string Role)> _users = new()
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AuthController(IUnitOfWork unitOfWork)
     {
-        ("admin", "admin123", "Admin"),
-        ("user", "user123", "User")
-    };
+        _unitOfWork = unitOfWork;
+    }
 
     [HttpPost("login")]
     public ActionResult<string> Login([FromBody] LoginRequest request)
     {
-        var user = _users.FirstOrDefault(u => 
-            u.Username == request.Username && u.Password == request.Password);
+        var users = _unitOfWork.User.GetAll();
+        
+        var user = users.FirstOrDefault(u => 
+            u.UserName == request.Username && u.Password == request.Password);
 
         if (user == default)
             return Unauthorized("Invalid credentials");
 
-        var token = GenerateJwtToken(user.Username, user.Role);
+        var token = GenerateJwtToken(user.UserName, user.Role);
         return Ok(new { token });
     }
 

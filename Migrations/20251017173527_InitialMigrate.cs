@@ -32,6 +32,21 @@ namespace Midterm_PROG3340_RDooley.Migrations
                     table.PrimaryKey("PK_Equipment", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "User",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserName = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    Role = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_User", x => x.Id);
+                });
+
             migrationBuilder.InsertData(
                 table: "Equipment",
                 columns: new[] { "Id", "Category", "Condition", "CreatedAt", "Description", "IsAvailable", "Name", "RentalPrice" },
@@ -45,6 +60,17 @@ namespace Midterm_PROG3340_RDooley.Migrations
                     { 6, "Power Tools", "New", new DateTime(2022, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified), "Gas-powered chainsaw for tree cutting", true, "Chainsaw", 25.0 },
                     { 7, "Heavy Machinery", "Fair", new DateTime(2023, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), "Electric forklift for warehouse operations", true, "Forklift", 120.0 }
                 });
+
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "Id", "Password", "Role", "UserName" },
+                values: new object[,]
+                {
+                    { 1, "password", "amdin", "AdminOne" },
+                    { 2, "password", "user", "UserOne" },
+                    { 3, "password", "user", "UserTwo" },
+                    { 4, "password", "user", "UserThree" }
+                });
         }
 
         /// <inheritdoc />
@@ -52,6 +78,9 @@ namespace Midterm_PROG3340_RDooley.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Equipment");
+
+            migrationBuilder.DropTable(
+                name: "User");
         }
     }
 }

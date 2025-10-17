@@ -11,7 +11,7 @@ using Midterm_PROG3340_RDooley.Data;
 namespace Midterm_PROG3340_RDooley.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251017172607_InitialMigrate")]
+    [Migration("20251017173527_InitialMigrate")]
     partial class InitialMigrate
     {
         /// <inheritdoc />
@@ -132,6 +132,59 @@ namespace Midterm_PROG3340_RDooley.Migrations
                             IsAvailable = true,
                             Name = "Forklift",
                             RentalPrice = 120.0
+                        });
+                });
+
+            modelBuilder.Entity("Midterm_PROG3340_RDooley.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Password = "password",
+                            Role = "amdin",
+                            UserName = "AdminOne"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Password = "password",
+                            Role = "user",
+                            UserName = "UserOne"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Password = "password",
+                            Role = "user",
+                            UserName = "UserTwo"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Password = "password",
+                            Role = "user",
+                            UserName = "UserThree"
                         });
                 });
 #pragma warning restore 612, 618

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Midterm_PROG3340_RDooley.Models.DTOs;
 using Midterm_PROG3340_RDooley.Repositories;
 
 namespace Midterm_PROG3340_RDooley
