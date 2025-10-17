@@ -11,7 +11,7 @@ using Midterm_PROG3340_RDooley.Data;
 namespace Midterm_PROG3340_RDooley.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251016203920_InitialMigrate")]
+    [Migration("20251017172607_InitialMigrate")]
     partial class InitialMigrate
     {
         /// <inheritdoc />
@@ -27,6 +27,10 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Condition")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -56,6 +60,7 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         {
                             Id = 1,
                             Category = "Heavy Machinery",
+                            Condition = "New",
                             CreatedAt = new DateTime(2023, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Large hydraulic excavator for heavy lifting",
                             IsAvailable = true,
@@ -66,6 +71,7 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         {
                             Id = 2,
                             Category = "Power Tools",
+                            Condition = "Exellent",
                             CreatedAt = new DateTime(2022, 7, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "18V battery-powered drill for versatile use",
                             IsAvailable = true,
@@ -76,6 +82,7 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         {
                             Id = 3,
                             Category = "Vehicles",
+                            Condition = "Fair",
                             CreatedAt = new DateTime(2021, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "4x4 truck for transporting equipment",
                             IsAvailable = false,
@@ -86,6 +93,7 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         {
                             Id = 4,
                             Category = "Safety",
+                            Condition = "Poor",
                             CreatedAt = new DateTime(2024, 5, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "High-impact protective helmet",
                             IsAvailable = true,
@@ -96,6 +104,7 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         {
                             Id = 5,
                             Category = "Surveying",
+                            Condition = "Good",
                             CreatedAt = new DateTime(2023, 11, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Precision surveying instrument for angle measurements",
                             IsAvailable = false,
@@ -106,6 +115,7 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         {
                             Id = 6,
                             Category = "Power Tools",
+                            Condition = "New",
                             CreatedAt = new DateTime(2022, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Gas-powered chainsaw for tree cutting",
                             IsAvailable = true,
@@ -116,6 +126,7 @@ namespace Midterm_PROG3340_RDooley.Migrations
                         {
                             Id = 7,
                             Category = "Heavy Machinery",
+                            Condition = "Fair",
                             CreatedAt = new DateTime(2023, 6, 30, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Electric forklift for warehouse operations",
                             IsAvailable = true,
