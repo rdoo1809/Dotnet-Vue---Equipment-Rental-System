@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     
     public DbSet<Equipment> Equipment { get; set; } = null!;
     public DbSet<Customer> Customer { get; set; } = null!;
+    public DbSet<Rental> Rental { get; set; } = null!;
          
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,15 +30,16 @@ public class AppDbContext : DbContext
         );
 
         modelBuilder.Entity<Customer>().HasData(
-            new Customer
-                { Id = 1, UserName = "AdminOne", Password = "password", Email = "adminemail@email.ca", Role = "Admin" },
-            new Customer
-                { Id = 2, UserName = "UserOne", Password = "password", Email = "useremail1@email.ca", Role = "User" },
-            new Customer
-                { Id = 3, UserName = "UserTwo", Password = "password", Email = "useremail2@email.ca", Role = "User" },
-            new Customer
-                { Id = 4, UserName = "UserThree", Password = "password", Email = "useremail3@email.ca", Role = "User" }
+            new Customer { Id = 1, UserName = "AdminOne", Password = "password", Email = "adminemail@email.ca", Role = "Admin" },
+            new Customer { Id = 2, UserName = "UserOne", Password = "password", Email = "useremail1@email.ca", Role = "User" },
+            new Customer { Id = 3, UserName = "UserTwo", Password = "password", Email = "useremail2@email.ca", Role = "User" },
+            new Customer { Id = 4, UserName = "UserThree", Password = "password", Email = "useremail3@email.ca", Role = "User" }
         );
-
+        
+        modelBuilder.Entity<Rental>().HasData(
+            new Rental { Id = 1, EquipmentId = 3, CustomerId = 2, IssuedAt = DateTime.Parse("2025-10-01T10:00:00Z"), ReturnedAt = null },
+            new Rental { Id = 2, EquipmentId = 5, CustomerId = 3, IssuedAt = DateTime.Parse("2025-09-15T14:00:00Z"), ReturnedAt = DateTime.Parse("2025-09-20T16:00:00Z") },
+            new Rental { Id = 3, EquipmentId = 7, CustomerId = 4, IssuedAt = DateTime.Parse("2025-09-10T09:30:00Z"), ReturnedAt = DateTime.Parse("2025-09-15T12:00:00Z") }
+        );
     }
 }
