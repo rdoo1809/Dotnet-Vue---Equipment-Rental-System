@@ -12,7 +12,7 @@ public class AppDbContext : DbContext
     }
     
     public DbSet<Equipment> Equipment { get; set; } = null!;
-    public DbSet<User> User { get; set; } = null!;
+    public DbSet<Customer> Customer { get; set; } = null!;
          
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,13 +27,17 @@ public class AppDbContext : DbContext
             new Equipment { Id = 6, Name = "Chainsaw", Description = "Gas-powered chainsaw for tree cutting", Category = "Power Tools", Condition = "New", RentalPrice = 25.00, IsAvailable = true, CreatedAt = DateTime.Parse("2022-09-18") },
             new Equipment { Id = 7, Name = "Forklift", Description = "Electric forklift for warehouse operations", Category = "Heavy Machinery", Condition = "Fair", RentalPrice = 120.00, IsAvailable = true, CreatedAt = DateTime.Parse("2023-06-30") }
         );
-        
-        modelBuilder.Entity<User>().HasData(
-            new User { Id = 1, UserName = "AdminOne", Password = "password", Role = "amdin" },
-            new User { Id = 2, UserName = "UserOne", Password = "password", Role = "user" },
-            new User { Id = 3, UserName = "UserTwo", Password = "password", Role = "user" },
-            new User { Id = 4, UserName = "UserThree", Password = "password", Role = "user" }
+
+        modelBuilder.Entity<Customer>().HasData(
+            new Customer
+                { Id = 1, UserName = "AdminOne", Password = "password", Email = "adminemail@email.ca", Role = "Admin" },
+            new Customer
+                { Id = 2, UserName = "UserOne", Password = "password", Email = "useremail1@email.ca", Role = "User" },
+            new Customer
+                { Id = 3, UserName = "UserTwo", Password = "password", Email = "useremail2@email.ca", Role = "User" },
+            new Customer
+                { Id = 4, UserName = "UserThree", Password = "password", Email = "useremail3@email.ca", Role = "User" }
         );
-        
+
     }
 }

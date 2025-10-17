@@ -3,7 +3,7 @@
     public interface IUnitOfWork
     {
         IRepository<Equipment> Equipment { get; }
-        IRepository<User> User { get; }
+        IRepository<Customer> Customer { get; }
 
         int Complete();
     }

@@ -20,7 +20,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public ActionResult<string> Login([FromBody] LoginRequest request)
     {
-        var users = _unitOfWork.User.GetAll();
+        var users = _unitOfWork.Customer.GetAll();
         
         var user = users.FirstOrDefault(u => 
             u.UserName == request.Username && u.Password == request.Password);

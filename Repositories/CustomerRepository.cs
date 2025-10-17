@@ -3,12 +3,12 @@ using Midterm_PROG3340_RDooley.Data;
 
 namespace Midterm_PROG3340_RDooley.Repositories;
 
-public class UserRepository<TEntity> : IRepository<TEntity> where TEntity : class
+public class CustomerRepository<TEntity> : IRepository<TEntity> where TEntity : class
 {
     protected readonly AppDbContext _context;
     protected readonly DbSet<TEntity> _dbSet;
 
-    public UserRepository(AppDbContext context)
+    public CustomerRepository(AppDbContext context)
     {
         _context = context;
         _dbSet = _context.Set<TEntity>();

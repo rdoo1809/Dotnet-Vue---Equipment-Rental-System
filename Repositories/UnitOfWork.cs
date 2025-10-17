@@ -8,13 +8,13 @@ namespace Midterm_PROG3340_RDooley.Repositories
         private readonly AppDbContext _appDbContext;
 
         public IRepository<Equipment> Equipment { get; set; }
-        public IRepository<User> User { get; set; }
+        public IRepository<Customer> Customer { get; set; }
 
         public UnitOfWork(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
             Equipment = new EquipmentRepository<Equipment>(_appDbContext);
-            User = new UserRepository<User>(_appDbContext);
+            Customer = new CustomerRepository<Customer>(_appDbContext);
         }
         
         public int Complete()
