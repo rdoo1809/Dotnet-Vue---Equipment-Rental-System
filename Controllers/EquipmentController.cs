@@ -60,7 +60,7 @@ namespace Midterm_PROG3340_RDooley
             if (!ModelState.IsValid) return BadRequest(ModelState);
             _unitOfWork.Equipment.Add(equipment);
             _unitOfWork.Complete();
-            return CreatedAtAction(nameof(ReadRentedEquipment), new { id = equipment.Id }, equipment);
+            return CreatedAtAction(nameof(ReadOneEquipment), new { id = equipment.Id }, equipment);
         }
 
         // PUT: /api/equipment/{id}
