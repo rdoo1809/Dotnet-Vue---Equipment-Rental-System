@@ -4,14 +4,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Midterm_PROG3340_RDooley.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// register unit of work for di
+// register unit of work
 builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+
+//register service
+builder.Services.AddScoped<CustomerService>();
 
 // register dbcontext with env
 builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>

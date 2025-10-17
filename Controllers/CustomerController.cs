@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Midterm_PROG3340_RDooley.Controllers;
 using Midterm_PROG3340_RDooley.Repositories;
+using Midterm_PROG3340_RDooley.Services;
 
 namespace Midterm_PROG3340_RDooley
 {
@@ -12,10 +12,12 @@ namespace Midterm_PROG3340_RDooley
     public class CustomerController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly CustomerService _customerService;
 
-        public CustomerController(IUnitOfWork unitOfWork)
+        public CustomerController(IUnitOfWork unitOfWork, CustomerService customerService)
         {
             _unitOfWork = unitOfWork;
+            _customerService = customerService;
         }
         
         //TODO
@@ -49,7 +51,7 @@ namespace Midterm_PROG3340_RDooley
         [HttpGet("{id}")]
         public ActionResult<Equipment> ReadOneEquipment(int id)
         {
-            var (customerName, customerRole) = GetUserNameAndRole();
+            var (customerName, customerRole) = _customerService.GetUserNameAndRole(User);
             var customer = _unitOfWork.Customer.GetById(id);
             if (customer is null) return NotFound();
             
@@ -77,7 +79,7 @@ namespace Midterm_PROG3340_RDooley
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var customer = _unitOfWork.Customer.GetById(id);
             if (customer is null) return NotFound();
-            var (customerName, customerRole) = GetUserNameAndRole();
+            var (customerName, customerRole) = _customerService.GetUserNameAndRole(User);
 
             //users can only update their own name password email
             if (customerRole == "User")
@@ -110,13 +112,6 @@ namespace Midterm_PROG3340_RDooley
             _unitOfWork.Customer.Delete(customer);
             _unitOfWork.Complete();
             return customer;
-        }
-        
-        private (string? customerName, string? customerRole) GetUserNameAndRole()
-        {
-            var customerRole = User.FindFirstValue(ClaimTypes.Role);
-            var customerName = User.FindFirstValue(ClaimTypes.Name);
-            return (customerName, customerRole );
         }
     }
 }

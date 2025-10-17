@@ -1,4 +1,7 @@
-﻿namespace Midterm_PROG3340_RDooley;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+
+namespace Midterm_PROG3340_RDooley;
 
 public class Customer
 {
