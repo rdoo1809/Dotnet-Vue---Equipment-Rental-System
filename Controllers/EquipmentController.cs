@@ -17,6 +17,24 @@ namespace Midterm_PROG3340_RDooley
             _unitOfWork = unitOfWork;
         }
         
+        // GET: /api/equipment-available
+        [Authorize(Roles = "Admin,User")]
+        [HttpGet("available")]
+        public ActionResult<IEnumerable<Equipment>> ReadAvailableEquipment()
+        {
+            var available = _unitOfWork.Equipment.GetAll().Where(e => e.IsAvailable);
+            var notAvailable = _unitOfWork.Equipment.GetAll().Where(e => !e.IsAvailable);
+            return Ok(new { available, notAvailable });
+        }
+        
+        // GET: /api/equipment-rented
+        [Authorize(Roles = "Admin")]
+        [HttpGet("rented")]
+        public ActionResult<IEnumerable<Equipment>> ReadRentedEquipment()
+        {
+            return Ok(_unitOfWork.Equipment.GetAll().Where(e => !e.IsAvailable));
+        }
+        
         // GET: /api/equipment
         [Authorize(Roles = "Admin,User")]
         [HttpGet]
@@ -43,7 +61,7 @@ namespace Midterm_PROG3340_RDooley
             if (!ModelState.IsValid) return BadRequest(ModelState);
             _unitOfWork.Equipment.Add(equipment);
             _unitOfWork.Complete();
-            return CreatedAtAction(nameof(ReadAllEquipment), new { id = equipment.Id }, equipment);
+            return CreatedAtAction(nameof(ReadRentedEquipment), new { id = equipment.Id }, equipment);
         }
 
         // PUT: /api/equipment/{id}
