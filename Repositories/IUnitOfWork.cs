@@ -4,6 +4,7 @@
     {
         IRepository<Equipment> Equipment { get; }
         IRepository<Customer> Customer { get; }
+        IRepository<Rental> Rental { get; }
 
         int Complete();
     }

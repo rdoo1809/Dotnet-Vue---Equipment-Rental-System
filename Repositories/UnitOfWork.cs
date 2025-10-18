@@ -9,12 +9,14 @@ namespace Midterm_PROG3340_RDooley.Repositories
 
         public IRepository<Equipment> Equipment { get; set; }
         public IRepository<Customer> Customer { get; set; }
+        public IRepository<Rental> Rental { get; set; }
 
         public UnitOfWork(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
             Equipment = new EquipmentRepository<Equipment>(_appDbContext);
             Customer = new CustomerRepository<Customer>(_appDbContext);
+            Rental = new RentalRepository<Rental>(_appDbContext);
         }
         
         public int Complete()

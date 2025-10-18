@@ -88,7 +88,7 @@ namespace Midterm_PROG3340_RDooley
         // Delete: api/equipment/{id}
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public ActionResult<Equipment> DeleteBook(int id)
+        public ActionResult<Equipment> DeleteEquipment(int id)
         {
             var equipment = _unitOfWork.Equipment.GetById(id);
             if (equipment is null) return NotFound();
