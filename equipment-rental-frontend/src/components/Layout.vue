@@ -13,7 +13,7 @@
         
         <div class="navbar-nav">
           <span class="navbar-text me-3">
-            {{ user?.name }} ({{ user?.role }})
+            {{ user?.userName }} ({{ user?.role }})
           </span>
           <button @click="logout" class="btn btn-outline-light btn-sm">Logout</button>
         </div>

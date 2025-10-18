@@ -16,18 +16,17 @@ namespace Midterm_PROG3340_RDooley
             _unitOfWork = unitOfWork;
         }
         
-        // GET: /api/equipment-available
+        // GET: /api/equipment/available
         [Authorize(Roles = "Admin,User")]
         [HttpGet("available")]
         public ActionResult<IEnumerable<Equipment>> ReadAvailableEquipment()
         {
             var available = _unitOfWork.Equipment.GetAll().Where(e => e.IsAvailable);
-            var notAvailable = _unitOfWork.Equipment.GetAll().Where(e => !e.IsAvailable);
-            return Ok(new { available, notAvailable });
+            return Ok(available);
         }
         
-        // GET: /api/equipment-rented
-        [Authorize(Roles = "Admin")]
+        // GET: /api/equipment/rented
+        [Authorize(Roles = "Admin,User")]
         [HttpGet("rented")]
         public ActionResult<IEnumerable<Equipment>> ReadRentedEquipment()
         {

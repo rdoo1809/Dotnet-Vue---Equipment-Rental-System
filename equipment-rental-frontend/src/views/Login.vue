@@ -69,7 +69,6 @@ const handleLogin = async () => {
   const result = await authStore.login(credentials.value)
   
   if (result.success) {
-    await authStore.getUserInfo()
     router.push('/dashboard')
   } else {
     error.value = result.error

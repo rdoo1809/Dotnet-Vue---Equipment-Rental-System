@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h1>Equipment</h1>
+      <h1>{{ pageTitle }}</h1>
       <button 
         v-if="isAdmin" 
         @click="showCreateModal = true" 
@@ -92,13 +92,17 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { equipmentService } from '@/services/equipment'
 import EquipmentModal from '@/components/EquipmentModal.vue'
 import ConfirmationModal from '@/components/ConfirmationModal.vue'
 
+const route = useRoute()
 const authStore = useAuthStore()
 const isAdmin = computed(() => authStore.user?.role === 'Admin')
+const isAvailableView = computed(() => route.name === 'EquipmentAvailable')
+const pageTitle = computed(() => isAvailableView.value ? 'Available Equipment' : 'Equipment')
 
 const equipmentList = ref([])
 const showCreateModal = ref(false)
@@ -113,7 +117,11 @@ onMounted(() => {
 
 const loadEquipment = async () => {
   try {
-    equipmentList.value = await equipmentService.getAll()
+    if (isAvailableView.value) {
+      equipmentList.value = await equipmentService.getAvailable()
+    } else {
+      equipmentList.value = await equipmentService.getAll()
+    }
   } catch (error) {
     console.error('Failed to load equipment:', error)
   }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Midterm_PROG3340_RDooley.Repositories;
 using Midterm_PROG3340_RDooley.Services;
 
@@ -22,23 +23,27 @@ namespace Midterm_PROG3340_RDooley
         // GET: /api/rental
         [Authorize(Roles = "Admin,User")]
         [HttpGet]
-        public ActionResult<IEnumerable<Rental>> ReadAllRentals()
+        public ActionResult<IEnumerable<RentalDto>> ReadAllRentals()
         {
             var (userName, userRole) = _customerService.GetUserNameAndRole(User);
             var customer = _unitOfWork.Customer.GetAll()
                 .FirstOrDefault(c => c.UserName == userName);
             if (customer is null) return NotFound();
+            
             var rentals = _unitOfWork.Rental.GetAll();
             
             //user role can only view own data
-            if (userRole == "User") return Ok(rentals.Where(r => r.CustomerId == customer.Id).ToList());
-            return Ok(rentals);
+            if (userRole == "User") 
+                rentals = rentals.Where(r => r.CustomerId == customer.Id);
+            
+            var rentalDtos = ConvertToRentalDtos(rentals.ToList());
+            return Ok(rentalDtos);
         }
 
         // GET: /api/rental/active
         [Authorize(Roles = "Admin,User")]
         [HttpGet("active")]
-        public ActionResult<IEnumerable<Rental>> ReadActiveRentals()
+        public ActionResult<IEnumerable<RentalDto>> ReadActiveRentals()
         {
             var (userName, userRole) = _customerService.GetUserNameAndRole(User);
             var customer = _unitOfWork.Customer.GetAll()
@@ -50,15 +55,16 @@ namespace Midterm_PROG3340_RDooley
             
             //user role can only view own data
             if (userRole == "User") 
-                return Ok(activeRentals.Where(r => r.CustomerId == customer.Id).ToList());
+                activeRentals = activeRentals.Where(r => r.CustomerId == customer.Id);
             
-            return Ok(activeRentals);
+            var rentalDtos = ConvertToRentalDtos(activeRentals.ToList());
+            return Ok(rentalDtos);
         }
 
         // GET: /api/rental/completed
         [Authorize(Roles = "Admin,User")]
         [HttpGet("completed")]
-        public ActionResult<IEnumerable<Rental>> ReadCompletedRentals()
+        public ActionResult<IEnumerable<RentalDto>> ReadCompletedRentals()
         {
             var (userName, userRole) = _customerService.GetUserNameAndRole(User);
             var customer = _unitOfWork.Customer.GetAll()
@@ -70,15 +76,16 @@ namespace Midterm_PROG3340_RDooley
             
             //user role can only view own data
             if (userRole == "User") 
-                return Ok(completedRentals.Where(r => r.CustomerId == customer.Id).ToList());
+                completedRentals = completedRentals.Where(r => r.CustomerId == customer.Id);
             
-            return Ok(completedRentals);
+            var rentalDtos = ConvertToRentalDtos(completedRentals.ToList());
+            return Ok(rentalDtos);
         }
 
         // GET: /api/rental/overdue
         [Authorize(Roles = "Admin,User")]
         [HttpGet("overdue")]
-        public ActionResult<IEnumerable<Rental>> ReadOverdueRentals()
+        public ActionResult<IEnumerable<RentalDto>> ReadOverdueRentals()
         {
             var (userName, userRole) = _customerService.GetUserNameAndRole(User);
             var customer = _unitOfWork.Customer.GetAll()
@@ -90,22 +97,31 @@ namespace Midterm_PROG3340_RDooley
             
             //user role can only view own data
             if (userRole == "User") 
-                return Ok(overdueRentals.Where(r => r.CustomerId == customer.Id).ToList());
+                overdueRentals = overdueRentals.Where(r => r.CustomerId == customer.Id);
             
-            return Ok(overdueRentals);
+            var rentalDtos = ConvertToRentalDtos(overdueRentals.ToList());
+            return Ok(rentalDtos);
         }
 
         // GET: /api/rental/{id}
         [Authorize(Roles = "Admin,User")]
         [HttpGet("{id}")]
-        public ActionResult<Rental> ReadOneRental(int id)
+        public ActionResult<RentalDto> ReadOneRental(int id)
         {
-            var customer = _unitOfWork.Customer.GetById(id);
-            var rental = _unitOfWork.Rental.GetById(id);
-            if (customer is null || rental is null) return NotFound();
+            var (userName, userRole) = _customerService.GetUserNameAndRole(User);
+            var customer = _unitOfWork.Customer.GetAll()
+                .FirstOrDefault(c => c.UserName == userName);
+            if (customer is null) return NotFound();
             
-            if (customer.Role == "User") return rental.CustomerId != customer.Id ? Forbid() : Ok(rental);
-            return Ok(rental);
+            var rental = _unitOfWork.Rental.GetById(id);
+            if (rental is null) return NotFound();
+            
+            //user role can only view own data
+            if (userRole == "User" && rental.CustomerId != customer.Id) 
+                return Forbid();
+            
+            var rentalDto = ConvertToRentalDto(rental);
+            return Ok(rentalDto);
         }
 
         // POST: /api/rental/issue
@@ -223,6 +239,41 @@ namespace Midterm_PROG3340_RDooley
             var equipment = _unitOfWork.Equipment.GetById(rental.EquipmentId);
             if (equipment == null) return false;
             return equipment.IsAvailable;
+        }
+        
+        private RentalDto ConvertToRentalDto(Rental rental)
+        {
+            var customer = _unitOfWork.Customer.GetById(rental.CustomerId);
+            var equipment = _unitOfWork.Equipment.GetById(rental.EquipmentId);
+            
+            return new RentalDto
+            {
+                Id = rental.Id,
+                EquipmentId = rental.EquipmentId,
+                CustomerId = rental.CustomerId,
+                EquipmentName = equipment?.Name ?? "Unknown Equipment",
+                CustomerName = customer?.UserName ?? "Unknown Customer",
+                IssuedAt = rental.IssuedAt,
+                DueDate = rental.DueDate,
+                ReturnedAt = rental.ReturnedAt,
+                Status = GetRentalStatus(rental)
+            };
+        }
+        
+        private List<RentalDto> ConvertToRentalDtos(List<Rental> rentals)
+        {
+            return rentals.Select(ConvertToRentalDto).ToList();
+        }
+        
+        private string GetRentalStatus(Rental rental)
+        {
+            if (rental.ReturnedAt != null)
+                return "Completed";
+            
+            if (rental.DueDate < DateTime.Now)
+                return "Overdue";
+            
+            return "Active";
         }
     }
 }

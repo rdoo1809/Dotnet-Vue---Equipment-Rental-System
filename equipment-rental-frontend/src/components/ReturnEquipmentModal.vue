@@ -59,12 +59,21 @@
       </div>
     </div>
   </div>
+  
+  <!-- Error Modal -->
+  <ErrorModal 
+    v-if="showErrorModal"
+    :error-title="errorTitle"
+    :error-message="errorMessage"
+    @close="showErrorModal = false"
+  />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { rentalService } from '@/services/rental'
 import { formatDate } from '@/utils/date'
+import ErrorModal from '@/components/ErrorModal.vue'
 
 const emit = defineEmits(['close', 'success'])
 
@@ -77,6 +86,11 @@ const form = ref({
 const activeRentals = ref([])
 const loading = ref(false)
 
+// Error handling
+const showErrorModal = ref(false)
+const errorTitle = ref('')
+const errorMessage = ref('')
+
 onMounted(async () => {
   await loadActiveRentals()
 })
@@ -86,6 +100,7 @@ const loadActiveRentals = async () => {
     activeRentals.value = await rentalService.getActive()
   } catch (error) {
     console.error('Failed to load active rentals:', error)
+    showError('Failed to Load Rentals', 'Unable to load active rentals. Please try again.')
   }
 }
 
@@ -96,8 +111,30 @@ const handleSubmit = async () => {
     emit('success')
   } catch (error) {
     console.error('Failed to return equipment:', error)
+    
+    // Extract error message from response
+    let errorMsg = 'An unexpected error occurred. Please try again.'
+    if (error.response?.data) {
+      if (typeof error.response.data === 'string') {
+        errorMsg = error.response.data
+      } else if (error.response.data.message) {
+        errorMsg = error.response.data.message
+      } else if (error.response.data.title) {
+        errorMsg = error.response.data.title
+      }
+    } else if (error.message) {
+      errorMsg = error.message
+    }
+    
+    showError('Failed to Return Equipment', errorMsg)
   } finally {
     loading.value = false
   }
+}
+
+const showError = (title, message) => {
+  errorTitle.value = title
+  errorMessage.value = message
+  showErrorModal.value = true
 }
 </script>

@@ -32,7 +32,7 @@
                   :key="customer.id" 
                   :value="customer.id"
                 >
-                  {{ customer.name }} ({{ customer.username }})
+                  {{ customer.userName }} ({{ customer.email }})
                 </option>
               </select>
             </div>
@@ -62,6 +62,14 @@
       </div>
     </div>
   </div>
+  
+  <!-- Error Modal -->
+  <ErrorModal 
+    v-if="showErrorModal"
+    :error-title="errorTitle"
+    :error-message="errorMessage"
+    @close="showErrorModal = false"
+  />
 </template>
 
 <script setup>
@@ -70,6 +78,7 @@ import { useAuthStore } from '@/stores/auth'
 import { equipmentService } from '@/services/equipment'
 import { customerService } from '@/services/customer'
 import { rentalService } from '@/services/rental'
+import ErrorModal from '@/components/ErrorModal.vue'
 
 const authStore = useAuthStore()
 const isAdmin = computed(() => authStore.user?.role === 'Admin')
@@ -86,6 +95,11 @@ const availableEquipment = ref([])
 const customers = ref([])
 const loading = ref(false)
 
+// Error handling
+const showErrorModal = ref(false)
+const errorTitle = ref('')
+const errorMessage = ref('')
+
 onMounted(async () => {
   await loadAvailableEquipment()
   if (isAdmin.value) {
@@ -98,6 +112,7 @@ const loadAvailableEquipment = async () => {
     availableEquipment.value = await equipmentService.getAvailable()
   } catch (error) {
     console.error('Failed to load available equipment:', error)
+    showError('Failed to Load Equipment', 'Unable to load available equipment. Please try again.')
   }
 }
 
@@ -106,6 +121,7 @@ const loadCustomers = async () => {
     customers.value = await customerService.getAll()
   } catch (error) {
     console.error('Failed to load customers:', error)
+    showError('Failed to Load Customers', 'Unable to load customer list. Please try again.')
   }
 }
 
@@ -116,8 +132,30 @@ const handleSubmit = async () => {
     emit('success')
   } catch (error) {
     console.error('Failed to issue equipment:', error)
+    
+    // Extract error message from response
+    let errorMsg = 'An unexpected error occurred. Please try again.'
+    if (error.response?.data) {
+      if (typeof error.response.data === 'string') {
+        errorMsg = error.response.data
+      } else if (error.response.data.message) {
+        errorMsg = error.response.data.message
+      } else if (error.response.data.title) {
+        errorMsg = error.response.data.title
+      }
+    } else if (error.message) {
+      errorMsg = error.message
+    }
+    
+    showError('Failed to Issue Equipment', errorMsg)
   } finally {
     loading.value = false
   }
+}
+
+const showError = (title, message) => {
+  errorTitle.value = title
+  errorMessage.value = message
+  showErrorModal.value = true
 }
 </script>

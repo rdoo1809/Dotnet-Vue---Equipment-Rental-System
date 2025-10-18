@@ -49,7 +49,7 @@ namespace Midterm_PROG3340_RDooley
         // GET: /api/customer/{id}
         [Authorize(Roles = "Admin,User")]
         [HttpGet("{id}")]
-        public ActionResult<Equipment> ReadOneEquipment(int id)
+        public ActionResult<Equipment> ReadOneCustomer(int id)
         {
             var (customerName, customerRole) = _customerService.GetUserNameAndRole(User);
             var customer = _unitOfWork.Customer.GetById(id);
@@ -68,7 +68,7 @@ namespace Midterm_PROG3340_RDooley
             if (!ModelState.IsValid) return BadRequest(ModelState);
             _unitOfWork.Customer.Add(customer);
             _unitOfWork.Complete();
-            return CreatedAtAction(nameof(ReadOneEquipment), new { id = customer.Id }, customer);
+            return CreatedAtAction(nameof(ReadOneCustomer), new { id = customer.Id }, customer);
         }
 
         // PUT: /api/customer/{id}

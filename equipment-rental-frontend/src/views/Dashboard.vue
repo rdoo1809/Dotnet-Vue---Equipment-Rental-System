@@ -20,7 +20,7 @@
           <div class="card-body">
             <h2 class="card-title">{{ stats.available }}</h2>
             <p class="card-text">Available</p>
-            <router-link to="/equipment" class="btn btn-light">View Available</router-link>
+            <router-link to="/equipment/available" class="btn btn-light">View Available</router-link>
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@
           <div class="card-body">
             <p><strong>Active Rentals:</strong> {{ activeRentals.length }}</p>
             <p><strong>Overdue Rentals:</strong> {{ stats.overdue }}</p>
-            <p><strong>Logged in as:</strong> {{ user?.name }} ({{ user?.role }})</p>
+            <p><strong>Logged in as:</strong> {{ user?.userName }} ({{ user?.role }})</p>
             <p><strong>System Status:</strong> <span class="text-success">Online</span></p>
           </div>
         </div>
@@ -125,10 +125,10 @@ onMounted(async () => {
 const loadDashboardData = async () => {
   try {
     const [statsData, activeRentalsData] = await Promise.all([
-      dashboardService.getEquipmentStats(),
+      dashboardService.getEquipmentStats(isAdmin.value),
       dashboardService.getActiveRentals()
     ])
-    
+
     stats.value = statsData
     activeRentals.value = activeRentalsData
   } catch (error) {
