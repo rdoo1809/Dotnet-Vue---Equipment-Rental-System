@@ -1,0 +1,156 @@
+# Cursor Rules for Equipment Rental Management System
+
+## Project Overview
+This is a .NET 9.0 Web API project implementing an Equipment Rental Management System using clean architecture patterns, JWT authentication, and Entity Framework Core with SQLite.
+
+## Architecture Patterns to Follow
+
+### 1. Repository Pattern
+- Always use the generic `IRepository<TEntity>` interface for data access
+- Create specific repository classes that inherit from `IRepository<TEntity>`
+- Never access `AppDbContext` directly from controllers
+- Use the Unit of Work pattern to manage repositories
+
+### 2. Unit of Work Pattern
+- Always inject `IUnitOfWork` into controllers
+- Use `_unitOfWork.EntityName` to access repositories
+- Call `_unitOfWork.Complete()` after making changes
+- Never call `SaveChanges()` directly on the context
+
+### 3. Controller Structure
+- Always use `[Authorize]` attribute on API controllers
+- Use `[Authorize(Roles = "Admin,User")]` for role-based access
+- Follow RESTful naming conventions for endpoints
+- Return proper HTTP status codes (Ok, NotFound, BadRequest, etc.)
+- Use `[FromBody]` for complex parameters
+- Validate `ModelState.IsValid` before processing
+
+### 4. Authentication & Authorization
+- Use JWT Bearer authentication
+- Extract user claims using `_customerService.GetUserNameAndRole(User)`
+- Implement role-based access control:
+  - Admin: Full access to all operations
+  - User: Limited access to own data only
+- Always check if user can access the requested resource
+
+### 5. Entity Models
+- Use `required` keyword for non-nullable properties
+- Include proper data annotations
+- Use `DateTime` for timestamps
+- Use `bool` for availability flags
+- Follow PascalCase naming convention
+
+### 6. Database Context
+- Use `AppDbContext` for all database operations
+- Configure entities in `OnModelCreating` method
+- Use `HasData()` for seeding initial data
+- Always use migrations for schema changes
+
+### 7. Service Layer
+- Create service classes for business logic
+- Inject services into controllers via constructor
+- Keep controllers thin, move logic to services
+- Use services for user claim extraction and validation
+
+## Code Style Guidelines
+
+### Naming Conventions
+- Controllers: `{Entity}Controller` (e.g., `EquipmentController`)
+- Repositories: `{Entity}Repository<TEntity>`
+- Services: `{Entity}Service`
+- Methods: Use descriptive names (e.g., `ReadAllEquipment`, `CreateRentalIssue`)
+- Variables: Use camelCase for local variables
+
+### Method Naming
+- GET operations: `Read{Entity}` or `Read{Entity}By{Property}`
+- POST operations: `Create{Entity}`
+- PUT operations: `Update{Entity}`
+- DELETE operations: `Delete{Entity}`
+- Special operations: Use descriptive names (e.g., `CreateRentalIssue`, `CreateRentalReturn`)
+
+### Error Handling
+- Return `NotFound()` when entity doesn't exist
+- Return `BadRequest()` for validation errors
+- Return `Forbid()` for authorization failures
+- Return `Unauthorized()` for authentication failures
+- Use descriptive error messages
+
+### Business Rules
+- Customers can only have one active rental at a time
+- Equipment must be available to be rented
+- Users can only access their own data (unless Admin)
+- Always update equipment availability when renting/returning
+- Use UTC time for timestamps
+
+## File Structure
+```
+Controllers/     - API controllers with [Authorize] attributes
+Models/         - Entity models with proper annotations
+Repositories/   - Repository pattern implementation
+Services/       - Business logic services
+Data/          - Database context and configuration
+Views/         - MVC views (minimal implementation)
+Migrations/    - Entity Framework migrations
+```
+
+## Dependencies
+- Always use dependency injection
+- Register services in `Program.cs`
+- Use constructor injection in controllers
+- Keep dependencies minimal and focused
+
+## Security
+- Never expose sensitive data in API responses
+- Always validate user permissions
+- Use proper authorization attributes
+- Hash passwords (currently using plain text for demo)
+- Validate all input parameters
+
+## Testing Considerations
+- Controllers should be easily testable
+- Use interfaces for all dependencies
+- Mock repositories and services in tests
+- Test both success and failure scenarios
+
+## Common Patterns
+
+### Controller Method Template
+```csharp
+[Authorize(Roles = "Admin,User")]
+[HttpGet]
+public ActionResult<IEnumerable<Entity>> ReadAllEntities()
+{
+    // Business logic here
+    var entities = _unitOfWork.Entity.GetAll();
+    return Ok(entities);
+}
+```
+
+### Repository Usage
+```csharp
+// Get all entities
+var entities = _unitOfWork.Entity.GetAll();
+
+// Get by ID
+var entity = _unitOfWork.Entity.GetById(id);
+if (entity is null) return NotFound();
+
+// Add new entity
+_unitOfWork.Entity.Add(entity);
+_unitOfWork.Complete();
+```
+
+### User Authentication
+```csharp
+var (userName, userRole) = _customerService.GetUserNameAndRole(User);
+if (userRole == "User" && !CanAccessResource(userName, resourceId))
+    return Forbid();
+```
+
+## Anti-Patterns to Avoid
+- Don't access `AppDbContext` directly from controllers
+- Don't put business logic in controllers
+- Don't skip authorization checks
+- Don't use magic strings for roles
+- Don't forget to call `Complete()` after changes
+- Don't expose internal implementation details
