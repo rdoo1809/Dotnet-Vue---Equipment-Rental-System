@@ -38,7 +38,7 @@
                 <td>
                   <div class="btn-group" role="group">
                     <router-link 
-                      :to="`/customers/${customer.id}`" 
+                      :to="`/customer/${customer.id}`" 
                       class="btn btn-sm btn-outline-primary"
                     >
                       View

@@ -35,15 +35,5 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('token')
     },
 
-    async getUserInfo() {
-      try {
-        const response = await api.get('/customers/me')
-        this.user = response.data
-        return response.data
-      } catch (error) {
-        console.error('Failed to get user info:', error)
-        return null
-      }
-    }
   }
 })

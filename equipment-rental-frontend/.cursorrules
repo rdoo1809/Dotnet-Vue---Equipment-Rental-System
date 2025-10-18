@@ -1,0 +1,243 @@
+# Cursor Rules for Equipment Rental Frontend
+
+## Project Overview
+This is a Vue.js 3 frontend application for an Equipment Rental Management System using modern web technologies including Vite, Pinia, Vue Router, and Bootstrap 5.
+
+## Architecture Patterns to Follow
+
+### 1. Vue 3 Composition API
+- Always use `<script setup>` syntax for components
+- Use `ref()` and `reactive()` for reactive state
+- Use `computed()` for derived state
+- Use `onMounted()`, `onUnmounted()` for lifecycle hooks
+- Prefer composition over options API
+
+### 2. Component Structure
+- Use PascalCase for component names (e.g., `EquipmentModal.vue`)
+- Place components in appropriate directories:
+  - `/components` for reusable UI components
+  - `/views` for page-level components
+- Always use `<template>`, `<script setup>`, and `<style>` sections
+- Use `defineProps()` and `defineEmits()` for component communication
+
+### 3. State Management with Pinia
+- Use Pinia stores for global state (auth, user data)
+- Keep component state local with `ref()` when possible
+- Use `useAuthStore()` for authentication state
+- Store JWT tokens in localStorage with automatic cleanup
+
+### 4. API Service Layer
+- Create dedicated service files in `/services` directory
+- Use axios for HTTP requests with interceptors
+- Implement proper error handling in services
+- Use async/await for API calls
+- Follow RESTful API patterns
+
+### 5. Routing with Vue Router
+- Use route guards for authentication (`requiresAuth`, `requiresAdmin`)
+- Implement lazy loading for route components
+- Use named routes and parameters
+- Handle navigation programmatically with `useRouter()`
+
+### 6. UI/UX Patterns
+- Use Bootstrap 5 components and utilities
+- Implement responsive design with Bootstrap grid
+- Use Bootstrap modals for forms and confirmations
+- Implement toast notifications for user feedback
+- Use Bootstrap badges for status indicators
+
+## Code Style Guidelines
+
+### Naming Conventions
+- Components: PascalCase (e.g., `EquipmentModal.vue`)
+- Files: kebab-case for non-components (e.g., `equipment-service.js`)
+- Variables: camelCase (e.g., `equipmentList`, `showModal`)
+- Constants: UPPER_SNAKE_CASE (e.g., `API_BASE_URL`)
+
+### Component Communication
+- Use `defineProps()` for parent-to-child data flow
+- Use `defineEmits()` for child-to-parent events
+- Use `provide/inject` for deep component communication
+- Use Pinia stores for global state sharing
+
+### API Integration
+- Always use the centralized `api.js` service
+- Implement proper error handling with try/catch
+- Use loading states for async operations
+- Handle 401 errors with automatic logout
+
+### Form Handling
+- Use `v-model` for two-way data binding
+- Implement form validation with Bootstrap classes
+- Use loading states during form submission
+- Clear forms after successful submission
+
+### Modal Patterns
+- Use Bootstrap modal classes (`modal show d-block`)
+- Implement proper modal state management
+- Use confirmation modals for destructive actions
+- Handle modal close events properly
+
+## Security Patterns
+
+### Authentication
+- Always check `authStore.isAuthenticated` before protected operations
+- Use route guards for page-level protection
+- Implement role-based access control with `isAdmin` computed
+- Handle token expiration with automatic logout
+
+### Data Protection
+- Never expose sensitive data in component templates
+- Validate user permissions before API calls
+- Use proper error handling for unauthorized access
+- Implement proper logout cleanup
+
+## Performance Patterns
+
+### Component Optimization
+- Use `v-if` vs `v-show` appropriately
+- Implement lazy loading for route components
+- Use `computed()` for expensive calculations
+- Avoid unnecessary re-renders with proper key usage
+
+### API Optimization
+- Implement loading states for better UX
+- Use Promise.all() for parallel API calls
+- Cache frequently accessed data
+- Handle API errors gracefully
+
+## Error Handling Patterns
+
+### API Errors
+- Use try/catch blocks for all API calls
+- Implement user-friendly error messages
+- Handle network errors gracefully
+- Use toast notifications for error feedback
+
+### Component Errors
+- Implement proper error boundaries
+- Use fallback UI for loading states
+- Handle missing data gracefully
+- Provide meaningful error messages
+
+## Testing Considerations
+
+### Component Testing
+- Test component props and emits
+- Mock API services in tests
+- Test user interactions and form submissions
+- Test authentication and authorization
+
+### Integration Testing
+- Test complete user workflows
+- Test API integration
+- Test routing and navigation
+- Test error scenarios
+
+## Common Patterns
+
+### Modal Management
+```vue
+<script setup>
+const showModal = ref(false)
+const editingItem = ref(null)
+
+const openModal = (item = null) => {
+  editingItem.value = item
+  showModal.value = true
+}
+
+const closeModal = () => {
+  showModal.value = false
+  editingItem.value = null
+}
+</script>
+```
+
+### API Service Usage
+```vue
+<script setup>
+import { equipmentService } from '@/services/equipment'
+
+const loadData = async () => {
+  try {
+    const data = await equipmentService.getAll()
+    // Handle success
+  } catch (error) {
+    console.error('Failed to load data:', error)
+    // Handle error
+  }
+}
+</script>
+```
+
+### Authentication Checks
+```vue
+<script setup>
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+const isAdmin = computed(() => authStore.user?.role === 'Admin')
+const isAuthenticated = computed(() => authStore.isAuthenticated)
+</script>
+```
+
+## Anti-Patterns to Avoid
+
+- Don't use Options API when Composition API is available
+- Don't access `$route` directly, use `useRoute()` instead
+- Don't mutate props directly, use emits instead
+- Don't forget to handle loading states
+- Don't skip error handling in API calls
+- Don't use inline styles when Bootstrap classes exist
+- Don't forget to clean up event listeners
+- Don't use `v-if` and `v-for` on the same element
+
+## File Organization
+
+### Component Structure
+```
+src/
+├── components/          # Reusable components
+│   ├── Layout.vue       # Main layout wrapper
+│   ├── Toast.vue        # Notification system
+│   └── *Modal.vue       # Modal components
+├── views/              # Page components
+│   ├── Login.vue       # Authentication
+│   ├── Dashboard.vue   # System overview
+│   └── *.vue           # Feature pages
+├── services/           # API services
+│   ├── api.js          # Axios configuration
+│   └── *.js            # Feature services
+├── stores/             # Pinia stores
+│   └── auth.js         # Authentication store
+├── router/             # Vue Router
+│   └── index.js        # Route configuration
+└── utils/              # Utility functions
+    └── date.js         # Date formatting
+```
+
+## Dependencies
+
+### Core Dependencies
+- Vue 3.5.22
+- Vue Router 4.6.3
+- Pinia 3.0.3
+- Axios 1.12.2
+- Bootstrap 5.3.8
+
+### Development Dependencies
+- Vite 7.1.10
+- @vitejs/plugin-vue 6.0.1
+- Bootstrap Icons 1.13.1
+
+## Best Practices
+
+1. **Always use Composition API** with `<script setup>`
+2. **Implement proper error handling** for all async operations
+3. **Use Bootstrap components** instead of custom CSS when possible
+4. **Follow the established patterns** for modals, forms, and API calls
+5. **Test user interactions** and edge cases
+6. **Implement loading states** for better UX
+7. **Use proper TypeScript types** when available
+8. **Follow the existing file structure** and naming conventions

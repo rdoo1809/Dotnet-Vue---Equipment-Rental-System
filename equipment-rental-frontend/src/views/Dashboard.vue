@@ -30,7 +30,7 @@
           <div class="card-body">
             <h2 class="card-title">{{ stats.rented }}</h2>
             <p class="card-text">Currently Rented</p>
-            <router-link to="/rentals" class="btn btn-light">View Rented</router-link>
+            <router-link to="/rental" class="btn btn-light">View Rented</router-link>
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@
             <h2 class="card-title">{{ stats.overdue }}</h2>
             <p class="card-text">Overdue Rentals</p>
             <small v-if="!isAdmin">Admin Access Required</small>
-            <router-link v-else to="/rentals?filter=overdue" class="btn btn-light">View Overdue</router-link>
+            <router-link v-else to="/rental?filter=overdue" class="btn btn-light">View Overdue</router-link>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
             <div class="d-grid gap-2">
               <button @click="showIssueModal = true" class="btn btn-primary">Issue Equipment</button>
               <button @click="showReturnModal = true" class="btn btn-success">Return Equipment</button>
-              <router-link to="/rentals" class="btn btn-info">View My Rentals</router-link>
+              <router-link to="/rental" class="btn btn-info">View My Rentals</router-link>
             </div>
           </div>
         </div>

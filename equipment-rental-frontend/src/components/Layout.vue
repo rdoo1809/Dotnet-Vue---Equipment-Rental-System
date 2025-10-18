@@ -7,8 +7,8 @@
         <div class="navbar-nav me-auto">
           <router-link to="/dashboard" class="nav-link">Dashboard</router-link>
           <router-link to="/equipment" class="nav-link">Equipment</router-link>
-          <router-link to="/rentals" class="nav-link">My Rentals</router-link>
-          <router-link v-if="isAdmin" to="/customers" class="nav-link">Customers</router-link>
+          <router-link to="/rental" class="nav-link">My Rentals</router-link>
+          <router-link v-if="isAdmin" to="/customer" class="nav-link">Customers</router-link>
         </div>
         
         <div class="navbar-nav">

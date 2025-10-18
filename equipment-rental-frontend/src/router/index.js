@@ -31,25 +31,25 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/customers',
+    path: '/customer',
     name: 'Customers',
     component: () => import('@/views/Customers.vue'),
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   {
-    path: '/customers/:id',
+    path: '/customer/:id',
     name: 'CustomerDetails',
     component: () => import('@/views/CustomerDetails.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path: '/rentals',
+    path: '/rental',
     name: 'Rentals',
     component: () => import('@/views/Rentals.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path: '/rentals/:id',
+    path: '/rental/:id',
     name: 'RentalDetails',
     component: () => import('@/views/RentalDetails.vue'),
     meta: { requiresAuth: true }

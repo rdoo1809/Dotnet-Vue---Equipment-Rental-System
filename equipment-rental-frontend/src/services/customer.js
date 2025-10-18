@@ -2,37 +2,28 @@ import api from './api'
 
 export const customerService = {
   async getAll() {
-    const response = await api.get('/customers')
+    const response = await api.get('/customer')
     return response.data
   },
 
   async getById(id) {
-    const response = await api.get(`/customers/${id}`)
+    const response = await api.get(`/customer/${id}`)
     return response.data
   },
 
   async create(customer) {
-    const response = await api.post('/customers', customer)
+    const response = await api.post('/customer', customer)
     return response.data
   },
 
   async update(id, customer) {
-    const response = await api.put(`/customers/${id}`, customer)
+    const response = await api.put(`/customer/${id}`, customer)
     return response.data
   },
 
   async delete(id) {
-    const response = await api.delete(`/customers/${id}`)
+    const response = await api.delete(`/customer/${id}`)
     return response.data
   },
 
-  async getRentals(id) {
-    const response = await api.get(`/customers/${id}/rentals`)
-    return response.data
-  },
-
-  async getActiveRental(id) {
-    const response = await api.get(`/customers/${id}/active-rental`)
-    return response.data
-  }
 }

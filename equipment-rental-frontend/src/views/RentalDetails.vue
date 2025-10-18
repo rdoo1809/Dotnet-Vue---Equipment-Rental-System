@@ -127,7 +127,7 @@ const loadRental = async () => {
     rental.value = await rentalService.getById(route.params.id)
   } catch (error) {
     console.error('Failed to load rental:', error)
-    router.push('/rentals')
+    router.push('/rental')
   }
 }
 
@@ -167,7 +167,7 @@ const confirmForceReturn = async () => {
   try {
     await rentalService.cancel(rental.value.id)
     showForceReturnModal.value = false
-    router.push('/rentals')
+    router.push('/rental')
   } catch (error) {
     console.error('Failed to force return:', error)
   }

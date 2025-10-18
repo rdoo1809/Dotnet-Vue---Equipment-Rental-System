@@ -6,19 +6,15 @@ export const dashboardService = {
       api.get('/equipment').then(res => res.data.length),
       api.get('/equipment/available').then(res => res.data.length),
       api.get('/equipment/rented').then(res => res.data.length),
-      api.get('/rentals/overdue').then(res => res.data.length)
+      api.get('/rental/overdue').then(res => res.data.length)
     ])
     
     return { total, available, rented, overdue }
   },
 
   async getActiveRentals() {
-    const response = await api.get('/rentals/active')
+    const response = await api.get('/rental/active')
     return response.data
   },
 
-  async getUserActiveRental() {
-    const response = await api.get('/customers/me/active-rental')
-    return response.data
-  }
 }

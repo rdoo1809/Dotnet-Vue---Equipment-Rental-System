@@ -126,7 +126,7 @@ const loadCustomer = async () => {
     customer.value = await customerService.getById(route.params.id)
   } catch (error) {
     console.error('Failed to load customer:', error)
-    router.push('/customers')
+    router.push('/customer')
   }
 }
 
@@ -164,7 +164,7 @@ const confirmDelete = async () => {
   try {
     await customerService.delete(customer.value.id)
     showDeleteModal.value = false
-    router.push('/customers')
+    router.push('/customer')
   } catch (error) {
     console.error('Failed to delete customer:', error)
   }

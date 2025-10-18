@@ -87,7 +87,7 @@
                 <td>
                   <div class="btn-group" role="group">
                     <router-link 
-                      :to="`/rentals/${rental.id}`" 
+                      :to="`/rental/${rental.id}`" 
                       class="btn btn-sm btn-outline-primary"
                     >
                       View
