@@ -1,7 +1,5 @@
 # Equipment Rental Management System
 
-## youtube link - https://youtu.be/Wg8csqKIVCY
-
 This project is a full-stack web application built as an academic assignment demonstrating modern web development practices. It consists of a **.NET 9.0 Web API backend** with **Vue.js 3 frontend** that manages equipment rentals with clean architecture, JWT authentication, and role-based access control.
 
 ## 🚀 Tech Stack
